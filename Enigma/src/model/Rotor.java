@@ -8,13 +8,16 @@ public class Rotor {
 	
 	final String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; //plaintext alphabet
 	
-	//Input:
-	//		String s: letters jumbled up somehow
-	//		char[] spinChars: characters where wheel turns next one
+	/**
+	 * @param s Letters mixed up somehow
+	 * @param spinChars Character(s) where wheel turns next one
+	 */
 	public Rotor(String s, char[] spinChars) {
 		rotor = s;
 		this.spinChars = spinChars;
 		currentIndex = 0;
+		
+		//find out indices where wheel turns next one
 		spinPlaces = new int[2];
 		spinPlaces[0] = rotor.indexOf(spinChars[0]);
 		if (spinChars.length > 1)
@@ -28,8 +31,13 @@ public class Rotor {
 		currentIndex = rotor.indexOf(c);
 	}
 	
-	//Returns true if it spins its neighbor
-	//Returns false otherwise
+	public char getSetting() {
+		return rotor.charAt(currentIndex);
+	}
+	
+	/**
+	 * @return True if it spins neighbor. False otherwise
+	 */
 	public boolean incrementSpinNeighbor() {
 		currentIndex = Math.floorMod(currentIndex+1, 26);
 		if (spinPlaces[0] == currentIndex || spinPlaces[1] == currentIndex)
@@ -40,42 +48,39 @@ public class Rotor {
 	public char getChar() {
 		return rotor.charAt(currentIndex);
 	}
-	
-	/*
-	//Input: char to encrypt
-	//Output: encrypted char
-	public char getChar(char c) {
-		int temp = alphabet.indexOf(c);
-		return rotor.charAt(temp);
-	}
-	*/
+
 	
 	public char addToChar(char c, char d) {
 		int temp = (int) c + (int) d;
 		while (temp < 65) 
 			temp += 26;
-		
 		while (temp > 90)
 			temp -= 26;
 		
 		return (char) temp;
 	}
+	
 	
 	public char addToChar(char c, int d) {
 		int temp = (int) c + d;
+		
+		//Make sure it's in range
 		while (temp < 65) 
 			temp += 26;
-		
 		while (temp > 90)
 			temp -= 26;
 		
 		return (char) temp;
 	}
 	
-	//INPUT: number 0-25 representing letter in string
+	/**
+	 * @param c Letter that passes through
+	 * @param n Number 0-25 that represents a letter in string
+	 * @return New encrypted letter
+	 */
 	public char passThroughOne(char c, int n) {
 		c = addToChar(c, n);
-		
+
 		c = addToChar(c, rotor.charAt(currentIndex));
 		
 		int temp = rotor.indexOf(c);
@@ -88,6 +93,12 @@ public class Rotor {
 		return c;
 	}
 	
+	/**
+	 * This is called as it travels back 
+	 * @param c
+	 * @param n
+	 * @return
+	 */
 	public char passThroughTwo(char c, int n) {
 		c = addToChar(c, n);
 		
